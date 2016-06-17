@@ -23,7 +23,7 @@ class Gateway
   def inclusive_hosts=(hosts)
     hosts = hosts.map(&:strip).reject(&:empty?)
     File.open(inclusive_hosts_file, 'w+') { |f| f.write(hosts.to_yaml) }
-    dns_manager.update_gfwlist
+    dns.update_gfwlist
   end
 
   def stats

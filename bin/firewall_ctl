@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/firewall_manager'
+require_relative '../lib/firewall'
 
 def main
   action = ARGV[0]
 
-  fm = FirewallManager.new
+  fm = Firewall.new
 
   case action
   when 'dynamic'
