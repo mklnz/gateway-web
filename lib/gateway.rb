@@ -28,8 +28,8 @@ class Gateway
 
   def stats
     stats = {}
-    stats[:local_ip] = IPSocket.getaddress(Socket.gethostname)
-    stats[:tunnel_ip] = tunnel.config['server_ip']
+    stats[:local_ip] = Socket.ip_address_list.detect(&:ipv4_private?).ip_address
+    stats[:tunnel_ip] = tunnel.config['server']
     stats
   end
 
