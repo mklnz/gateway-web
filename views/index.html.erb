@@ -1,0 +1,37 @@
+<h1>Gateway</h1>
+
+<div class="ui grid">
+  <div class="nine wide column">
+    <h2>Overview</h2>
+
+    <table class="ui celled table">
+      <tbody>
+        <tr>
+          <td>Gateway IP</td>
+          <td><%= @stats[:local_ip] %></td>
+        </tr>
+        <tr>
+          <td>Tunnel IP</td>
+          <td><%= @stats[:tunnel_ip] %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><%= @local_ip %></p>
+  </div>
+  <div class="three wide column">
+    <h2>Actions</h2>
+
+    <form action="/gfwlist/update" method="post">
+      <button class="ui button" type="submit">Update GFWList</button>
+    </form>
+
+    <form action="/ipset/flush" method="post">
+      <button class="ui button" type="submit">Flush IPSet</button>
+    </form>
+
+    <form action="/tunnel/restart" method="post">
+      <button class="ui button" type="submit">Restart Tunnel</button>
+    </form>
+  </div>
+</div>

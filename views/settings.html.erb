@@ -1,0 +1,13 @@
+<h1>Settings</h1>
+
+<div class="ui grid">
+  <div class="six wide column">
+    <form class="ui form" action="/settings/inclusive-hosts" method="post">
+      <div class="field">
+        <label>Inclusive hosts</label>
+        <textarea name="inclusive_hosts" rows="20"><%= @inclusive_hosts %></textarea>
+      </div>
+      <button class="ui button" type="submit">Submit</button>
+    </form>
+  </div>
+</div>

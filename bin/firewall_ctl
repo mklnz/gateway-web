@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/firewall_manager'
+
+def main
+  action = ARGV[0]
+
+  fm = FirewallManager.new
+
+  case action
+  when 'dynamic'
+    fm.set_dynamic
+  when 'direct'
+    fm.set_direct
+  when 'global'
+    fm.set_global
+  when 'setup'
+    fm.setup
+  when 'clean'
+    fm.clean
+  when 'flush'
+    fm.flush
+  else
+    puts 'global, dynamic, direct, setup, clean, flush'
+  end
+end
+
+main
