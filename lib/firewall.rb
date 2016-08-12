@@ -3,8 +3,7 @@ require 'json'
 class Firewall
   def setup
     `ipset -N gfwlist iphash`
-    `ipset add gfwlist 8.8.8.8`
-    `ipset add gfwlist 8.8.4.4`
+    add_dns_ipset
   end
 
   def clean
@@ -15,6 +14,7 @@ class Firewall
 
   def flush_ipset
     `ipset flush gfwlist`
+    add_dns_ipset
   end
 
   def set_global
@@ -40,6 +40,7 @@ class Firewall
   def set_dynamic
     set_direct
     `iptables -t nat -N SHADOWSOCKS`
+    `iptables -t nat -A SHADOWSOCKS -d #{server} -j RETURN`
     `iptables -t nat -A SHADOWSOCKS -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080`
     `iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS`
     `iptables -t nat -A PREROUTING -p tcp -j SHADOWSOCKS`
@@ -50,5 +51,12 @@ class Firewall
     `iptables -X`
     `iptables -t nat -F`
     `iptables -t nat -X`
+  end
+
+  private
+
+  def add_dns_ipset
+    `ipset add gfwlist 8.8.8.8`
+    `ipset add gfwlist 8.8.4.4`
   end
 end
