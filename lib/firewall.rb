@@ -1,6 +1,16 @@
 require 'json'
 
 class Firewall
+  attr_accessor :config
+
+  def initialize
+    load_config
+  end
+
+  def load_config
+    self.config = JSON.parse(File.read('/etc/shadowsocks-libev/config.json'))
+  end
+
   def setup
     `ipset -N gfwlist iphash`
     add_dns_ipset
@@ -19,11 +29,8 @@ class Firewall
 
   def set_global
     set_direct
-    config = JSON.parse(File.read('/etc/shadowsocks-libev/config.json'))
-    server = config['server']
-    port = config['local_port']
     `iptables -t nat -N SHADOWSOCKS`
-    `iptables -t nat -A SHADOWSOCKS -d #{server} -j RETURN`
+    `iptables -t nat -A SHADOWSOCKS -d #{config['server']} -j RETURN`
     `iptables -t nat -A SHADOWSOCKS -d 0.0.0.0/8 -j RETURN`
     `iptables -t nat -A SHADOWSOCKS -d 10.0.0.0/8 -j RETURN`
     `iptables -t nat -A SHADOWSOCKS -d 127.0.0.0/8 -j RETURN`
@@ -32,7 +39,7 @@ class Firewall
     `iptables -t nat -A SHADOWSOCKS -d 192.168.0.0/16 -j RETURN`
     `iptables -t nat -A SHADOWSOCKS -d 224.0.0.0/4 -j RETURN`
     `iptables -t nat -A SHADOWSOCKS -d 240.0.0.0/4 -j RETURN`
-    `iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-port #{port}`
+    `iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-port #{config['local_port']}`
     `iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS`
     `iptables -t nat -A PREROUTING -p tcp -j SHADOWSOCKS`
   end
@@ -40,8 +47,8 @@ class Firewall
   def set_dynamic
     set_direct
     `iptables -t nat -N SHADOWSOCKS`
-    `iptables -t nat -A SHADOWSOCKS -d #{server} -j RETURN`
-    `iptables -t nat -A SHADOWSOCKS -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port 1080`
+    `iptables -t nat -A SHADOWSOCKS -d #{config['server']} -j RETURN`
+    `iptables -t nat -A SHADOWSOCKS -p tcp -m set --match-set gfwlist dst -j REDIRECT --to-port #{config['local_port']}`
     `iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS`
     `iptables -t nat -A PREROUTING -p tcp -j SHADOWSOCKS`
   end
