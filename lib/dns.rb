@@ -5,7 +5,7 @@ class DNS
   end
 
   def dnsmasq_restart
-    `service dnsmasq restart`
+    `sudo service dnsmasq restart`
   end
 
   private
