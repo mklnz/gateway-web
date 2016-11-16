@@ -1,0 +1,31 @@
+<%= link_to 'Back to Servers', servers_path, class: 'button' %>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="2"><%= @server.name %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Host</td>
+      <td><%= @server.host %></td>
+    </tr>
+    <tr>
+      <td>Port</td>
+      <td><%= @server.port %></td>
+    </tr>
+    <tr>
+      <td>Password</td>
+      <td><%= @server.password %></td>
+    </tr>
+    <tr>
+      <td>Method</td>
+      <td><%= @server.method %></td>
+    </tr>
+    <tr>
+      <td>Timeout</td>
+      <td><%= @server.timeout %></td>
+    </tr>
+  </tbody>
+</table>

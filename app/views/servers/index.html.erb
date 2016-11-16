@@ -1,0 +1,25 @@
+<%= link_to 'Add server', new_server_path, class: 'button' %>
+
+<table class='servers'>
+  <thead>
+    <tr>
+      <th>Server</th>
+      <th>Host</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @servers.each do |server| %>
+    <% active_class = 'active' if server.active? %>
+    <tr class="<%= active_class %>">
+      <td><%= link_to server.name, server %></td>
+      <td><%= server.host %></td>
+      <td>
+        <%= link_to 'Edit', '#' %>
+        <%= link_to 'Delete', server, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <%= link_to 'Use', settings_path(data: { active_server_id: server.id }), method: :put unless server.active? %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

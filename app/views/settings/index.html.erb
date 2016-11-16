@@ -1,0 +1,12 @@
+<%= form_tag settings_path, method: :put do %>
+  <label>Proxy mode
+    <%= select_tag 'data[proxy_mode]',
+          options_for_select(
+            Setting::PROXY_MODES.map {|m| [m.to_s.humanize, m]},
+            @proxy_mode
+          ),
+          include_blank: 'Disabled' %>
+  </label>
+
+  <%= submit_tag 'Save', class: 'button' %>
+<% end %>

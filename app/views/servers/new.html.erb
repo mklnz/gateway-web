@@ -1,0 +1,15 @@
+<h1><%= t('.add_server') %></h1>
+
+<div class="row">
+  <div class="medium-6 columns">
+    <%= simple_form_for @server do |f| %>
+      <%= f.input :name %>
+      <%= f.input :host %>
+      <%= f.input :port, as: :integer %>
+      <%= f.input :password %>
+      <%= f.input :method, as: :select, collection: Server::METHODS %>
+      <%= f.input :timeout, as: :integer, default: 60 %>
+      <%= f.button :submit, value: t('.add_server') %>
+    <% end %>
+  </div>
+</div>

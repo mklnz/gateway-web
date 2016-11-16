@@ -1,27 +1,29 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/firewall'
+require_relative '../app/gateway/firewall'
 
 def main
   action = ARGV[0]
 
-  fm = Firewall.new
+  fw = Firewall.instance
 
   case action
-  when 'dynamic'
-    fm.set_dynamic
-  when 'direct'
-    fm.set_direct
-  when 'global'
-    fm.set_global
   when 'setup'
-    fm.setup
+    fw.setup
+  when 'direct'
+    fw.set_direct
+  when 'blocked'
+    fw.set_blocked
+  when 'foreign'
+    fw.set_foreign
+  when 'global'
+    fw.set_global
+  when 'flush_ipset'
+    fw.flush_ipset
   when 'clean'
-    fm.clean
-  when 'flush'
-    fm.flush
+    fw.clean
   else
-    puts 'global, dynamic, direct, setup, clean, flush'
+    puts 'setup, direct, global, foreign, blocked, flush_ipset, clean'
   end
 end
 
