@@ -21,5 +21,4 @@
 
 en:
   servers:
-    new:
-      add_server: 'Add Server'
+    submit: 'Submit'

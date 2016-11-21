@@ -11,6 +11,8 @@ class Server
 
   validates :name, :host, :port, :password, :method, :timeout, presence: true
 
+  after_save :refresh_ss_config
+
   def self.active
     active_server_id = Setting.get('active_server_id')
     Server.find(active_server_id) unless active_server_id.nil?
@@ -30,5 +32,11 @@ class Server
       timeout: 60,
       method: method
     }.to_json
+  end
+
+  private
+
+  def refresh_ss_config
+    Setting.set('active_server_id', id) if active?
   end
 end

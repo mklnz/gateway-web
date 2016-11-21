@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
-require_relative '../app/gateway/firewall'
+require_relative '../app/lib/gateway/base'
 
 def main
   action = ARGV[0]
 
-  fw = Firewall.instance
+  fw = Gateway::Firewall.instance
 
   case action
   when 'setup'

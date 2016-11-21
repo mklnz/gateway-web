@@ -1,0 +1,9 @@
+<%= simple_form_for @server do |f| %>
+  <%= f.input :name %>
+  <%= f.input :host %>
+  <%= f.input :port, as: :integer %>
+  <%= f.input :password %>
+  <%= f.input :method, as: :select, collection: Server::METHODS %>
+  <%= f.input :timeout, as: :integer, default: 60 %>
+  <%= f.button :submit, value: t('servers.submit') %>
+<% end %>

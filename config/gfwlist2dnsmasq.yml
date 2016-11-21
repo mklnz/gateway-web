@@ -1,0 +1,4 @@
+base_url: https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
+dns_host: 127.0.0.1
+dns_port: 1053
+ipset_name: gfwlist
