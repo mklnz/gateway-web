@@ -1,2 +1,2 @@
-# Restore saved proxy mode
+Setting.bootstrap
 Setting.restore_proxy_mode

@@ -15,10 +15,23 @@ class Setting
   def self.set(key, value)
     setting = Setting.find_or_create_by(key: key)
     setting.value = value
-    setting.save
+    result = setting.save
 
-    return unless setting.respond_to?("#{key}_changed", true)
-    setting.send("#{key}_changed", value)
+    if setting.respond_to?("#{key}_changed", true)
+      setting.send("#{key}_changed", value)
+    end
+
+    result
+  end
+
+  def self.bootstrap
+    # Load defaults
+    defaults = YAML.load_file("#{Rails.root}/config/gateway_defaults.yml")
+                   .with_indifferent_access
+
+    defaults.each do |k, v|
+      Setting.set(k, v) if Setting.get(k).nil?
+    end
   end
 
   def self.restore_proxy_mode
