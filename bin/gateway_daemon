@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'daemons'
+PID_PATH = File.expand_path('../../tmp/pids', __FILE__)
+ENV_PATH = File.expand_path('../../config/environment.rb', __FILE__)
+
+options = {
+  dir_mode: :normal,
+  dir: PID_PATH
+}
+
+Daemons.run_proc('gateway_daemon', options) do
+  require ENV_PATH
+
+  loop do
+    puts 'Starting update...'
+    MetadataServer.fetch_data
+    puts 'Finished updating'
+    sleep 60
+  end
+end

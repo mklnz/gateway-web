@@ -4,6 +4,9 @@ gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
 gem 'puma', '~> 3.0'
 gem 'mongoid', '~> 6.0', '>= 6.0.2'
 
+# Background
+gem 'daemons', '~> 1.2'
+
 # Assets
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'

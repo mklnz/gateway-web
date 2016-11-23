@@ -1,19 +1,8 @@
 module Gateway
-  class EndpointClient < Base
-    METADATA_URL =
-      'https://raw.githubusercontent.com/mklnz/ruby-openwrt-endpoint/master/endpoint.json'.freeze
-    CACHE = File.expand_path('../../config/endpoint.json', __FILE__).freeze
-
-    def cache(reload: false)
-      if @cache.nil? || reload
-        reload_cache
-      else
-        @cache
-      end
-    end
-
-    def endpoint_url
-      cache['endpoint_url']
+  class MetadataClient < Base
+    def update(url)
+      response = open(url).read
+      data = JSON.parse(response)
     end
 
     def update

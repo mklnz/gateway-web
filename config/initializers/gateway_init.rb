@@ -1,2 +1,1 @@
-Setting.bootstrap
 Setting.restore_proxy_mode

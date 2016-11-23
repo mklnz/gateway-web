@@ -1,0 +1,4 @@
+MetadataServer.create!(
+  url: '',
+  priority: 1
+)

@@ -24,14 +24,9 @@ class Setting
     result
   end
 
-  def self.bootstrap
-    # Load defaults
-    defaults = YAML.load_file("#{Rails.root}/config/gateway_defaults.yml")
-                   .with_indifferent_access
-
-    defaults.each do |k, v|
-      Setting.set(k, v) if Setting.get(k).nil?
-    end
+  def self.delete(key)
+    setting = Setting.find_by(key: key)
+    setting.destroy
   end
 
   def self.restore_proxy_mode

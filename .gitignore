@@ -17,5 +17,5 @@
 .byebug_history
 
 .rbenv-vars
-config/gateway_defaults.yml
+db/servers.rb
 shared/shadowsocks.json
