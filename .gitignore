@@ -8,12 +8,15 @@
 /.bundle
 
 # Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
+
+/tmp/*.txt
 /tmp/pids/*
+/tmp/cache/*
+/tmp/sockets/*
 !/tmp/pids/.keep
+
+/log/*
+!/log/.keep
 
 # Ignore Byebug command history file.
 .byebug_history
