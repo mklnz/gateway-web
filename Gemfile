@@ -25,8 +25,11 @@ gem 'simple_form', '~> 3.3'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'rspec-rails', '~> 3.5'
+  gem 'guard-rails', '~> 0.8.0'
+  gem 'guard-rspec', '~> 4.7'
+  gem 'pry-rails', '~> 0.3.4'
 end
 
 group :development do
@@ -34,6 +37,13 @@ group :development do
   gem 'listen', '~> 3.0.5'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+end
+
+group :test do
+  gem 'database_cleaner', '~> 1.5'
+  gem 'factory_girl_rails', '~> 4.7'
+  gem 'webmock', '~> 2.1'
+  gem 'timecop', '~> 0.8.0'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

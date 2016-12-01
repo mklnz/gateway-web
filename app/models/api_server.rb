@@ -6,4 +6,8 @@ class ApiServer
   field :priority, type: Integer
 
   default_scope -> { order(priority: :desc) }
+
+  def self.fetch_data
+
+  end
 end

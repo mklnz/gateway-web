@@ -1,5 +1,5 @@
 APP_DIR = File.expand_path("../..", __FILE__).freeze
-TMP_DIR = "#{app_dir}/tmp".freeze
+TMP_DIR = "#{APP_DIR}/tmp".freeze
 
 threads 1, 1
 

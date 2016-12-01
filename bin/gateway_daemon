@@ -14,7 +14,7 @@ Daemons.run_proc('gateway_daemon', options) do
 
   loop do
     puts 'Starting update...'
-    MetadataServer.fetch_data
+    MetadataServer.sync_all
     puts 'Finished updating'
     sleep 60
   end

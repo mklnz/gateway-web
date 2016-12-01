@@ -7,43 +7,57 @@ class MetadataServer
 
   default_scope -> { order(priority: :desc) }
 
-  def self.fetch_data
-    local_updated_at = Setting.get('metadata_updated_at')
-
-    MetadataServer.all.each do |s|
-      begin
-        response = open(s.url).read
-        metadata = JSON.parse(response)
-        server_updated_at = DateTime.parse(metadata['updated_at'])
-
-        break if local_updated_at.present? && local_updated_at >= server_updated_at
-
-        MetadataServer.sync(metadata)
-
-        Setting.set('metadata_updated_at', Time.zone.now)
-        break
-      rescue StandardError => e
-        next
-      end
+  def self.sync_all
+    MetadataServer.order(priority: :asc).each do |ms|
+      return true if ms.sync
     end
   end
 
-  def self.sync(metadata)
-    Array(metadata['api_servers']).each do |ad|
-      api_server = ApiServer.find_or_create_by(url: ad['url'])
-      api_server.priority = ad['priority']
-      api_server.updated_at = metadata['updated_at']
-      api_server.save
-    end
+  def self.clean_outdated(current_updated)
+    ApiServer.where(:updated_at.lt => current_updated).destroy_all
+    MetadataServer.where(:updated_at.lt => current_updated).destroy_all
+  end
 
-    Array(metadata['metadata_servers']).each do |md|
-      metadata_server = MetadataServer.find_or_create_by(url: md['url'])
-      metadata_server.priority = md['priority']
-      metadata_server.updated_at = metadata['updated_at']
-      metadata_server.save
-    end
+  def sync
+    json_data = fetch_json_data
+    metadata_server_data = json_data['metadata_servers']
+    api_server_data = json_data['api_servers']
+    remote_updated_at = DateTime.parse(json_data['updated_at'])
+    return true if updated_at >= remote_updated_at
 
-    ApiServer.where(:updated_at.lt => metadata['updated_at']).destroy_all
-    MetadataServer.where(:updated_at.lt => metadata['updated_at']).destroy_all
+    sync_metadata_servers(metadata_server_data, remote_updated_at)
+    sync_api_servers(api_server_data)
+
+    MetadataServer.clean_outdated(remote_updated_at)
+    true
+  rescue StandardError
+    false
+  end
+
+  private
+
+  def fetch_json_data
+    response = open(url).read
+    JSON.parse(response)
+  end
+
+  def sync_metadata_servers(server_data, updated_at = Time.zone.now)
+    server_data.each do |sd|
+      server = MetadataServer.find_or_create_by(
+        url: sd['url']
+      )
+      server.priority = sd['priority']
+      server.updated_at = updated_at
+      server.save
+    end
+  end
+
+  def sync_api_servers(server_data, updated_at = Time.zone.now)
+    # Array(metadata['api_servers']).each do |ad|
+    #   api_server = ApiServer.find_or_create_by(url: ad['url'])
+    #   api_server.priority = ad['priority']
+    #   api_server.updated_at = metadata['updated_at']
+    #   api_server.save
+    # end
   end
 end
