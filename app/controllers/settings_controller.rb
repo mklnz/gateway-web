@@ -1,6 +1,8 @@
 class SettingsController < ApplicationController
   def index
     @proxy_mode = Setting.get('proxy_mode')
+    @email = Setting.get('cns_email')
+    @token = Setting.get('cns_token')
   end
 
   def update

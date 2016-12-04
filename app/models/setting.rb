@@ -14,13 +14,14 @@ class Setting
 
   def self.set(key, value)
     setting = Setting.find_or_create_by(key: key)
+    return true if value == setting.value
+
     setting.value = value
     result = setting.save
 
     if setting.respond_to?("#{key}_changed", true)
       setting.send("#{key}_changed", value)
     end
-
     result
   end
 
@@ -35,6 +36,15 @@ class Setting
     return unless ENV['GATEWAY_DEVICE']
     Gateway::Firewall.instance.setup
     Gateway::Firewall.instance.switch_mode(mode)
+  end
+
+  def self.auth_set?
+    Setting.get('cns_email') && Setting.get('cns_token')
+  end
+
+  def self.api_update
+    MetadataServer.sync_all
+    ApiServer.first.sync_ss_servers
   end
 
   private

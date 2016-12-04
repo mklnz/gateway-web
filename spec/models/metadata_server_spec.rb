@@ -4,8 +4,13 @@ describe MetadataServer do
   # let(:metadata_server) { create(:metadata_server) }
 
   let(:api_servers_json) do
-    [{ url: 'https://api1.example.org', priority: 1 },
-     { url: 'https://api2.example.org', priority: 2 }]
+    [{ url: 'https://api1.example.org', priority: 2 },
+     { url: 'https://api2.example.org', priority: 1 }]
+  end
+
+  let(:api_servers_delete_json) do
+    [{ url: 'https://api2.example.org', priority: 1 },
+     { url: 'https://api3.example.org', priority: 2 }]
   end
 
   let(:metadata_servers_json) do
@@ -32,18 +37,22 @@ describe MetadataServer do
       stub_request(:get, @metadata_server.url).to_return(
         body: server_response(api_servers_json, metadata_servers_json)
       )
-      @metadata_server.sync
     end
 
     it 'sync adds entries' do
+      @metadata_server.sync
       expect(MetadataServer.count).to eq(2)
       expect(MetadataServer.last.url).to eq(metadata_servers_json.last[:url])
+      expect(ApiServer.count).to eq(2)
     end
 
     it 'syncs and updates existing entry' do
-      # Updates priority on first metadata server
+      api_server = create(:api_server)
+      @metadata_server.sync
+      # Updates priority on servers
       expect(MetadataServer.first.url).to eq(metadata_servers_json.first[:url])
       expect(MetadataServer.first.priority).to eq(2)
+      expect(ApiServer.find_by(url: api_server.url).priority).to eq(2)
     end
   end
 
@@ -68,12 +77,16 @@ describe MetadataServer do
 
       expect(md_servers.count).to eq(2)
       expect(md_servers.last.url).to eq(metadata_servers_json.last[:url])
+      expect(ApiServer.count).to eq(2)
     end
 
     it 'sync all removes old servers' do
-      Timecop.travel(1.hour.ago) { @metadata_server = create(:metadata_server) }
+      Timecop.travel(1.hour.ago) do
+        @metadata_server = create(:metadata_server)
+        @api_server = create(:api_server)
+      end
       stub_request(:get, @metadata_server.url).to_return(
-        body: server_response(api_servers_json, metadata_servers_delete_json)
+        body: server_response(api_servers_delete_json, metadata_servers_delete_json)
       )
 
       MetadataServer.sync_all
@@ -81,6 +94,7 @@ describe MetadataServer do
       expect(MetadataServer.count).to eq(2)
       expect(MetadataServer.where(url: @metadata_server.url).count)
         .to eq(0)
+      expect(ApiServer.where(url: @api_server.url).count).to eq(0)
     end
   end
 end

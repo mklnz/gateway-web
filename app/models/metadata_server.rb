@@ -42,7 +42,7 @@ class MetadataServer
   end
 
   def sync_metadata_servers(server_data, updated_at = Time.zone.now)
-    server_data.each do |sd|
+    Array(server_data).each do |sd|
       server = MetadataServer.find_or_create_by(
         url: sd['url']
       )
@@ -53,11 +53,11 @@ class MetadataServer
   end
 
   def sync_api_servers(server_data, updated_at = Time.zone.now)
-    # Array(metadata['api_servers']).each do |ad|
-    #   api_server = ApiServer.find_or_create_by(url: ad['url'])
-    #   api_server.priority = ad['priority']
-    #   api_server.updated_at = metadata['updated_at']
-    #   api_server.save
-    # end
+    Array(server_data).each do |sd|
+      server = ApiServer.find_or_create_by(url: sd['url'])
+      server.priority = sd['priority']
+      server.updated_at = updated_at
+      server.save
+    end
   end
 end

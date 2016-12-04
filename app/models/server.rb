@@ -1,17 +1,24 @@
 class Server
   include Mongoid::Document
+  include Mongoid::Timestamps
+
+  field :node_id, type: Integer
   field :name, type: String
   field :host, type: String
   field :port, type: Integer
   field :password, type: String
-  field :method, type: String
+  field :encryption_method, type: String
   field :timeout, type: Integer
+  field :priority, type: Integer
 
   METHODS = ['rc4-md5', 'salsa20'].freeze
 
-  validates :name, :host, :port, :password, :method, :timeout, presence: true
+  validates :node_id, :name, :host, :port, :password, :encryption_method,
+            :timeout, presence: true
 
   after_save :refresh_ss_config
+
+  scope :prioritize, -> { order(priority: :asc) }
 
   def self.active
     active_server_id = Setting.get('active_server_id')

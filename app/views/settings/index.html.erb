@@ -8,5 +8,13 @@
           include_blank: 'Disabled' %>
   </label>
 
+  <label>Email
+      <%= text_field_tag 'data[cns_email]', @email %>
+  </label>
+
+  <label>API Token
+      <%= text_field_tag 'data[cns_token]', @token %>
+  </label>
+
   <%= submit_tag 'Save', class: 'button' %>
 <% end %>
