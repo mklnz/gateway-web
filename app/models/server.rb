@@ -37,7 +37,7 @@ class Server
       local_port: 1080,
       password: password,
       timeout: 60,
-      method: method
+      method: encryption_method
     }.to_json
   end
 
