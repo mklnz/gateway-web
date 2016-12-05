@@ -13,11 +13,6 @@ class MetadataServer
     end
   end
 
-  def self.clean_outdated(current_updated)
-    ApiServer.where(:updated_at.lt => current_updated).destroy_all
-    MetadataServer.where(:updated_at.lt => current_updated).destroy_all
-  end
-
   def sync
     json_data = fetch_json_data
     metadata_server_data = json_data['metadata_servers']
@@ -26,7 +21,6 @@ class MetadataServer
     sync_metadata_servers(metadata_server_data)
     sync_api_servers(api_server_data)
 
-    MetadataServer.clean_outdated(remote_updated_at)
     true
   rescue StandardError
     false
