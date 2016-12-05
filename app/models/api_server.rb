@@ -25,7 +25,7 @@ class ApiServer
     end
 
     Server.where(:node_id.nin => remote_servers.map { |rs| rs['id'] }).destroy
-    Setting.set('active_server_id', Server.prioritize.first.id)
+    Setting.set('active_server_id', Server.prioritize.first.id) if Server.prioritize.first
   end
 
   private

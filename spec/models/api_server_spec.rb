@@ -12,12 +12,12 @@ describe ApiServer do
   end
 
   let(:api_nodes) do
-    [{ id: '1', name: 'hk1', host: '8.8.8.8', password: 'testmannz', port: 2001, method: 'rc4-md5', timeout: 60, sort: 1, updated_at: 1.hour.ago },
-     { id: '2', name: 'hk2', host: '8.8.4.4', password: 'testmannz', port: 2002, method: 'rc4-md5', timeout: 60, sort: 2, updated_at: 1.hour.ago }]
+    [{ id: '1', name: 'hk1', host: '8.8.8.8', password: 'testmannz', port: 2001, method: 'rc4-md5', timeout: 60, priority: 1 },
+     { id: '2', name: 'hk2', host: '8.8.4.4', password: 'testmannz', port: 2002, method: 'rc4-md5', timeout: 60, priority: 2 }]
   end
 
   let(:api_nodes_new_only) do
-    [{ id: '3', name: 'hk3', host: '127.0.0.7', password: 'testmannz', port: 2003, method: 'rc4-md5', timeout: 60, sort: 1, updated_at: 1.hour.ago }]
+    [{ id: '3', name: 'hk3', host: '127.0.0.1', password: 'testmannz', port: 2003, method: 'rc4-md5', timeout: 60, priority: 1 }]
   end
 
   def server_response(ss_servers)
