@@ -23,7 +23,7 @@ module Gateway
 
     def gen_script(host, port, remote_forward_port)
       "#!/bin/bash
-/usr/bin/autossh -M 0 -o 'ServerAliveInterval 30' \
+AUTOSSH_PIDFILE=~/tunnel.pid /usr/bin/autossh -M 0 -o 'ServerAliveInterval 30' \
 -o 'ServerAliveCountMax 3' -N -f -R #{remote_forward_port}:127.0.0.1:22 \
 tunnel@#{host} -p #{port}"
     end
