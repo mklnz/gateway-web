@@ -20,7 +20,8 @@ class ApiServer
         port: rs['port'],
         password: rs['password'],
         encryption_method: rs['method'],
-        timeout: rs['timeout']
+        timeout: rs['timeout'],
+        priority: rs['priority']
       )
     end
 
