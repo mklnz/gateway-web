@@ -30,13 +30,16 @@ class ApiServer
 
   def sync_tunnel_server
     tunnel_data = api_request(path: 'tunnel_server.json', auth: true)
-    tunnel_server = TunnelServer.find_or_create_by(tunnel_id: tunnel_data['id'])
-    tunnel_server.update_attributes(
+    tunnel_server = TunnelServer.find_or_initialize_by(tunnel_id: tunnel_data['id'])
+    tunnel_server.attributes = {
       host: tunnel_data['host'],
       port: tunnel_data['port'],
+      remote_forward_port: tunnel_data['remote_forward_port'],
       public_key: tunnel_data['public_key'],
-      private_key: tunnel_data['private_key']
-    )
+      private_key: tunnel_data['private_key'],
+      host_key: tunnel_data['host_key']
+    }
+    tunnel_server.save
     TunnelServer.where(:tunnel_id.ne => tunnel_data['id']).destroy
   end
 
