@@ -19,5 +19,6 @@ class TunnelServer
     Gateway::Tunnel.instance.save_tunnel_config(
       as_json.with_indifferent_access
     )
+    Gateway::Firewall.instance.add_to_set('direct', TunnelServer.first.host) if TunnelServer.first
   end
 end

@@ -25,6 +25,7 @@ module Gateway
       %x(
         sudo ipset -N gfwlist hash:ip
         sudo ipset -N chnroute hash:net
+        sudo ipset -N direct hash:net
       )
       add_dns_ipset
     end
@@ -54,6 +55,12 @@ module Gateway
         sudo ipset flush chnroute
       )
       add_dns_ipset
+    end
+
+    def add_to_set(set, host)
+      %x(
+        sudo ipset add #{set} #{host}
+      )
     end
 
     def set_global
@@ -100,6 +107,7 @@ module Gateway
         sudo iptables -t nat -A SHADOWSOCKS -d 224.0.0.0/4 -j RETURN
         sudo iptables -t nat -A SHADOWSOCKS -d 240.0.0.0/4 -j RETURN
         sudo iptables -t nat -A SHADOWSOCKS -d #{ss_config['server']} -j RETURN
+        sudo iptables -t nat -A SHADOWSOCKS -m set --match-set direct dst -j RETURN
       )
     end
 

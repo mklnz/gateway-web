@@ -33,6 +33,7 @@ class Setting
 
     return unless ENV['GATEWAY_DEVICE']
     Gateway::Firewall.instance.setup
+    Gateway::Firewall.instance.add_to_set('direct', TunnelServer.first.host) if TunnelServer.first
     Gateway::Firewall.instance.switch_mode(mode)
   end
 
