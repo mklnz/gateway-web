@@ -60,13 +60,13 @@ describe ApiServer do
         body: server_response(api_nodes_new_only)
       )
       server = create(:server)
-      Setting.set('active_server_id', server.id)
+      Setting.set('active_server_id', server.id.to_s)
 
       @api_server.sync_ss_servers
 
       top_server = Server.prioritize.first
       expect(top_server.node_id.to_s).to eq(api_nodes_new_only.first[:id])
-      expect(Setting.get('active_server_id')).to eq(top_server.id)
+      expect(Setting.get('active_server_id')).to eq(top_server.id.to_s)
     end
   end
 

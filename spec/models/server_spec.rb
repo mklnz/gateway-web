@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Server do
   let(:active_server) do
     server = create(:server)
-    Setting.set('active_server_id', server.id)
+    Setting.set('active_server_id', server.id.to_s)
     server
   end
 

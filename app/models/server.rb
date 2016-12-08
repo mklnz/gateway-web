@@ -27,7 +27,7 @@ class Server
   end
 
   def active?
-    id == Setting.get('active_server_id')
+    id.to_s == Setting.get('active_server_id')
   end
 
   def ss_config

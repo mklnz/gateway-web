@@ -25,7 +25,9 @@ class ApiServer
     end
 
     Server.where(:node_id.nin => remote_servers.map { |rs| rs['id'] }).destroy
-    Setting.set('active_server_id', Server.prioritize.first.id) if Server.prioritize.first
+    Setting.set(
+      'active_server_id', Server.prioritize.first.id.to_s
+    ) if Server.prioritize.first
   end
 
   def sync_tunnel_server
