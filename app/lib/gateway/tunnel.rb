@@ -18,6 +18,8 @@ module Gateway
     end
 
     def restart
+      `sudo systemctl daemon-reload`
+      `sudo systemctl enable tunnel.service`
       `sudo systemctl restart tunnel.service`
     end
 
