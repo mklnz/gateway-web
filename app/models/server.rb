@@ -17,6 +17,7 @@ class Server
             :timeout, presence: true
 
   after_save :refresh_ss_config
+  after_destroy :after_destroy
 
   scope :prioritize, -> { order(priority: :asc) }
 
@@ -26,7 +27,7 @@ class Server
   end
 
   def active?
-    id.to_s == Setting.get('active_server_id')
+    id == Setting.get('active_server_id')
   end
 
   def ss_config
@@ -45,5 +46,9 @@ class Server
 
   def refresh_ss_config
     Setting.set('active_server_id', id) if active?
+  end
+
+  def after_destroy
+    Setting.delete('active_server_id') if active?
   end
 end

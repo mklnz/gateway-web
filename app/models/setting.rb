@@ -5,6 +5,8 @@ class Setting
 
   PROXY_MODES = [:blocked_servers, :foreign_servers, :all_servers].freeze
 
+  after_save :send_callback
+
   def self.get(key)
     setting = Setting.find_by(key: key)
     setting.value unless setting.nil?
@@ -18,10 +20,6 @@ class Setting
 
     setting.value = value
     result = setting.save
-
-    if setting.respond_to?("#{key}_changed", true)
-      setting.send("#{key}_changed", value)
-    end
     result
   end
 
@@ -39,7 +37,7 @@ class Setting
   end
 
   def self.auth_set?
-    Setting.get('cns_email') && Setting.get('cns_token')
+    Setting.get('cns_email').present? && Setting.get('cns_token').present?
   end
 
   def self.api_update
@@ -49,13 +47,20 @@ class Setting
 
   private
 
-  # Callback
+  # Callbacks
+  def send_callback
+    send("#{key}_changed", value) if respond_to?("#{key}_changed", true)
+  end
+
   def active_server_id_changed(value)
+    if value.nil?
+      Setting.set('proxy_mode', '')
+      return
+    end
     server = Server.find(value)
 
     return unless ENV['GATEWAY_DEVICE']
-    Gateway::Firewall.instance.set_direct
-    Gateway::Shadowsocks.instance.save_ss_config(server.ss_config)
+    Gateway::Shadowsocks.instance.save_ss_config(server.ss_config) if server.present?
     Setting.restore_proxy_mode
   end
 

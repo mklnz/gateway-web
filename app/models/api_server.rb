@@ -28,6 +28,18 @@ class ApiServer
     Setting.set('active_server_id', Server.prioritize.first.id) if Server.prioritize.first
   end
 
+  def sync_tunnel_server
+    tunnel_data = api_request(path: 'tunnel_server.json', auth: true)
+    tunnel_server = TunnelServer.find_or_create_by(tunnel_id: tunnel_data['id'])
+    tunnel_server.update_attributes(
+      host: tunnel_data['host'],
+      port: tunnel_data['port'],
+      public_key: tunnel_data['public_key'],
+      private_key: tunnel_data['private_key']
+    )
+    TunnelServer.where(:tunnel_id.ne => tunnel_data['id']).destroy
+  end
+
   private
 
   def api_request(path:, auth: false)
