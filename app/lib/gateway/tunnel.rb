@@ -11,7 +11,6 @@ module Gateway
         gen_script(tunnel[:host], tunnel[:port], tunnel[:remote_forward_port])
       )
       File.chmod(0o755, TUNNEL_SCRIPT_FILE)
-      load_ss_config
       restart
     end
 
