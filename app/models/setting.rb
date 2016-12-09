@@ -41,12 +41,6 @@ class Setting
     Setting.get('cns_email').present? && Setting.get('cns_token').present?
   end
 
-  def self.api_update
-    MetadataServer.sync_all
-    ApiServer.first.sync_ss_servers
-    ApiServer.first.sync_tunnel_server
-  end
-
   private
 
   # Callbacks

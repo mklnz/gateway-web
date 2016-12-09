@@ -21,6 +21,8 @@
 # Ignore Byebug command history file.
 .byebug_history
 
-.rbenv-vars
+.env
 db/servers.rb
-shared/shadowsocks.json
+/shared/shadowsocks.json
+/shared/dnsmasq.d/*
+!/shared/dnsmasq.d/.keep

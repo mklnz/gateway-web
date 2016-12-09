@@ -2,6 +2,10 @@ module Gateway
   class DNS < Base
     include Singleton
 
+    CHINA_DOMAINS_FILE = File.join(Rails.root, 'shared', 'dnsmasq.d',
+                                   'accelerated-domains.china.conf').freeze
+    CHINA_DOMAINS_URL = 'https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf'.freeze
+
     def update_gfwlist
       `#{gfwlist2dnsmasq} -c #{g2d_config} -e #{g2d_extras} -o #{g2d_outfile}`
       dnsmasq_restart
@@ -9,6 +13,12 @@ module Gateway
 
     def dnsmasq_restart
       `sudo service dnsmasq restart`
+    end
+
+    def update_china_domains_list
+      open(CHINA_DOMAINS_FILE, 'w') do |f|
+        f << open(CHINA_DOMAINS_URL).read
+      end
     end
 
     private
