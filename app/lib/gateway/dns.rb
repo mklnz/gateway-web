@@ -12,13 +12,14 @@ module Gateway
     end
 
     def dnsmasq_restart
-      `sudo service dnsmasq restart`
+      `sudo systemctl restart dnsmasq.service`
     end
 
     def update_china_domains_list
       open(CHINA_DOMAINS_FILE, 'w') do |f|
         f << open(CHINA_DOMAINS_URL).read
       end
+      dnsmasq_restart
     end
 
     private
