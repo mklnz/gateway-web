@@ -4,6 +4,6 @@ class DashboardController < ApplicationController
   end
 
   def api_update
-    Setting.api_update
+    ApiServer.sync_all
   end
 end

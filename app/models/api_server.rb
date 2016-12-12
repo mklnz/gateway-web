@@ -9,6 +9,12 @@ class ApiServer
 
   default_scope -> { order(priority: :desc) }
 
+  def self.sync_all
+    api_server = ApiServer.first
+    api_server.sync_ss_servers
+    api_server.sync_tunnel_server
+  end
+
   def sync_ss_servers
     return unless Setting.auth_set?
     remote_servers = api_request(path: 'nodes.json', auth: true)
